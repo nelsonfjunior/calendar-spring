@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,11 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.api.DTO.EventDTO;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
@@ -33,6 +36,10 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar.Events;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class GoogleCalController {
@@ -67,6 +74,45 @@ public class GoogleCalController {
 	public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
 		return new RedirectView(authorize());
 	}
+
+	@PostMapping("/add-event")
+    public ResponseEntity<String> createEvent(@RequestBody EventDTO eventDTO) {
+        try {
+            if (client == null) {
+                return new ResponseEntity<>("Google Calendar client is not initialized.", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            // Criar um novo evento
+            Event event = new Event()
+                    .setSummary(eventDTO.summary())
+                    .setLocation(eventDTO.location())
+                    .setDescription(eventDTO.description());
+
+            // Definir o horário de início
+            DateTime startDateTime = new DateTime(eventDTO.startTime());
+            EventDateTime start = new EventDateTime().setDateTime(startDateTime).setTimeZone("America/Sao_Paulo");
+            event.setStart(start);
+
+            // Definir o horário de término
+            DateTime endDateTime = new DateTime(eventDTO.endTime());
+            EventDateTime end = new EventDateTime().setDateTime(endDateTime).setTimeZone("America/Sao_Paulo");
+            event.setEnd(end);
+
+            // Adicionar lembretes padrão
+            Event.Reminders reminders = new Event.Reminders()
+                    .setUseDefault(false)
+                    .setOverrides(Collections.singletonList(new EventReminder().setMethod("email").setMinutes(24 * 60)));
+            event.setReminders(reminders);
+
+            // Inserir evento no Google Calendar
+            event = client.events().insert("primary", event).execute();
+
+            return new ResponseEntity<>("Evento criado: " + event.getHtmlLink(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Erro ao criar evento: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 	@RequestMapping(value = "/login/google", method = RequestMethod.GET, params = "code")
 	public ResponseEntity<String> oauth2Callback(@RequestParam(value = "code") String code) {
