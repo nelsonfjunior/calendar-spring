@@ -23,19 +23,19 @@ Este é um aplicativo Spring Boot protegido pelo Spring Security OAuth2, utiliza
 
 O projeto utiliza Maven, então basta executar o seguinte comando para compilá-lo:
 
-    ```bash
+```bash
     mvn clean build
-    ```
+```
 
 O arquivo application.properties (em src/main/resources) contém as credenciais da aplicação Google. Certifique-se de modificar os seguintes atributos para os valores do seu aplicativo:
 
-    ```bash
+```bash
     google.client.id=
     google.client.secret=
     google.redirect.uri=http://localhost:9000/login/google
     google.client.access-token-uri=
     google.client.user-authorization-uri=
-    ```
+```
 
 ### Como registrar um aplicativo no Google?
 
