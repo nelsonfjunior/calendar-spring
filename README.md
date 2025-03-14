@@ -1,10 +1,8 @@
-# google-calendar-api
+# Projeto de Demonstração para a API do Google Calendar Usando Spring Boot Rest API com OAuth2
 
-For more information: http://www.a2cart.com/gmail-api-and-google-calendar-api-spring-boot-and-oauth2/
+Este guia mostra como construir um aplicativo de exemplo que interage com as APIs do Google, especificamente a API do Google Calendar, usando OAuth2 e Spring Boot.
 
-Demo Project for Google Calendar API Using Spring Boot Rest API with OAuth2
-
-This guide shows you how to build a sample app doing various things with "Google APIs" using OAuth2 and Spring Boot. It starts with a simple, single-provider single-sign on, and works up to a self-hosted OAuth2 Authorization Server with a choice of authentication providers (Fitbit or Facebook or Github). The samples are all single-page apps using Spring Boot and Spring OAuth on the back end. They also all use AngularJS on the front end, but the changes needed to convert to a different JavaScript framework or to use server side rendering would be minimal.
+O projeto começa com um login único (Single Sign-On) utilizando OAuth2 com o Google e inclui funcionalidades adicionais, como criação de eventos no Google Calendar e listagem de eventos após o login bem-sucedido.
 
 Google Calendar API  - Spring Boot and OAuth2
 
@@ -13,60 +11,62 @@ Google Calendar API  - Spring Boot and OAuth2
 3) Google Calendar API
 4) OAuth2
 
-<h2>What do I do?</h2>
+<h2>O que este projeto faz?</h2>
 
-I am simple Spring Boot application which secured by Spring Security. Instead of using simple form based security, I am secured by Spring Security OAuth2 and the OAuth provider is Google.
+Este é um aplicativo Spring Boot protegido pelo Spring Security OAuth2, utilizando o Google como provedor de autenticação. Além do login seguro, ele também oferece os seguintes recursos:
 
-Why am I required?
+✅ Autenticação OAuth2 com Google
+✅ Listar todos os eventos do Google Calendar após o login
+✅ Criar um novo evento no Google Calendar
 
-Developing a Spring Boot web application with Security enabled and integrated with Google is hard to implement. So this is a sample implementation of Spring Boot + Spring Security OAuth2 + Google Provider.
+<h2>Como executar o projeto?</h2>
 
-<h2>Get it up and runnning</h2>
+O projeto utiliza Maven, então basta executar o seguinte comando para compilá-lo:
+mvn clean build
 
-The project is built with Maven so you can run the build using mvn clean build
+O arquivo application.properties (em src/main/resources) contém as credenciais da aplicação Google. Certifique-se de modificar os seguintes atributos para os valores do seu aplicativo:
+google.client.id=
+google.client.secret=
+google.redirect.uri=http://localhost:9000/login/google
+google.calendar.scope=https://www.googleapis.com/auth/calendar
 
-The application.properties (in src/main/resources) contains the details of the Google application which it uses to authenticate details. Change the values of the following attributes to the values for your application google.client.id google.client.secret and etc.,
+###Como registrar um aplicativo no Google?
+1️⃣ Acesse Google Cloud Console e faça login com sua conta Google.
+2️⃣ Se ainda não tiver um projeto, crie um novo e selecione-o.
+3️⃣ No menu lateral, vá para "APIs e serviços" → "Credenciais" → "Criar credencial" → "ID do Cliente OAuth".
+4️⃣ Selecione as seguintes opções:
 
-###To register a Google App perform the following steps
+Tipo de Aplicação = Aplicação Web (Spring Boot)
+Origens JavaScript Autorizadas = (deixe em branco ou preencha conforme necessário)
+URI de Redirecionamento Autorizado = http://localhost:9000/login/google
+5️⃣ Copie o Client ID e o Client Secret e atualize o arquivo application.properties.
+6️⃣ Vá até "APIs e serviços" → "Biblioteca" e ative a Google Calendar API.
+7️⃣ Preencha as informações obrigatórias na aba "Tela de Consentimento OAuth".
 
-Go to https://console.developers.google.com and login with your Google account (this will be the developer account and the email of this account will be published when someone tries to authenticate with the Google application)
+<h2>Testando a autenticação e integração com o Google Calendar</h2>
+1️⃣ Autenticar com o Google
 
-If you don't have a project create a new one and then click into the project.
+Após iniciar a aplicação Spring Boot, acesse:
+http://localhost:9000/login/google
+Isso redirecionará para a página de login do Google.
+Ao fazer login, o Google pedirá autorização para acessar os dados da sua conta e do Google Calendar.
 
-In the menu on the left side select "APIs & auth" --> "Credentials" --> "Create a new client ID"
+2️⃣ Listar eventos do Google Calendar
 
-In the popup select the following
+Após autenticar, faça uma requisição GET para:
+GET http://localhost:9000/calendar/list-events
+A resposta conterá todos os eventos do seu Google Calendar.
 
-Application Type = SpringBoot Web Application
+3️⃣ Criar um novo evento no Google Calendar
 
-Authorized Javascript Origins = ,
-
-Authorized Redirect URI = , the URI for our application is http://localhost:9000/login/google on different lines.
-
-Copy the client ID and client Secret and update the application.properties
-
-Make sure you update the mandatory values on the "APIs & auth" --> "Consent screen" page as the application will not work without it.
-
-When you have a the Google App configured and the Spring boot application and you navigate to http://localhost:9000/login/google. It will redirect you to a Google login page. Upong login it will ask you to authorize your application for access to your account to get email and profile data. On successful login it will render the basic HTML page which means the authentication was sucessful.
-
-<!-- Google Calendar Maven Dependency-->
-
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-calendar</artifactId>
-			<version>v3-rev224-1.22.0</version>
-		</dependency>
-
-		<!-- Gmail Maven Dependency-->
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-gmail</artifactId>
-			<version>v1-rev65-1.18.0-rc</version>
-		</dependency>
-
-
-That’s it. Thank you for reading this post.
-
-Enjoy!!!
-
-www.a2cart.com
+Para criar um evento, envie uma requisição POST para:
+POST http://localhost:9000/api/calendar/add-event
+Corpo da requisição de exemplo (JSON):
+{
+    "summary": "Reunião de Time",
+    "location": "Google Meet",
+    "description": "Discussão sobre o projeto X",
+    "startTime": "2025-03-13T14:00:00-03:00",
+    "endTime": "2025-03-13T15:00:00-03:00"
+}
+A resposta confirmará a criação do evento no Google Calendar.
