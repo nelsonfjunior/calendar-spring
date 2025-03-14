@@ -44,9 +44,9 @@ O arquivo application.properties (em src/main/resources) contém as credenciais 
     - Tipo de Aplicação = Aplicação Web (Spring Boot)
     - Origens JavaScript Autorizadas = (deixe em branco ou preencha conforme necessário)
     - URI de Redirecionamento Autorizado = http://localhost:9000/login/google
-        - 5️. **Copie o Client ID e o Client Secret e atualize o arquivo application.properties.**
-        - 6. **Vá até "APIs e serviços" → "Biblioteca" e ative a Google Calendar API.**
-        - 7. **Preencha as informações obrigatórias na aba "Tela de Consentimento OAuth".**
+        - **Copie o Client ID e o Client Secret e atualize o arquivo application.properties.**
+        - **Vá até "APIs e serviços" → "Biblioteca" e ative a Google Calendar API.**
+        - **Preencha as informações obrigatórias na aba "Tela de Consentimento OAuth".**
 
 ### Testando a autenticação e integração com o Google Calendar
 
