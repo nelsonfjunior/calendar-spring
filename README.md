@@ -22,13 +22,11 @@ Este é um aplicativo Spring Boot protegido pelo Spring Security OAuth2, utiliza
 ## Como executar o projeto?
 
 O projeto utiliza Maven, então basta executar o seguinte comando para compilá-lo:
-
 ```bash
     mvn clean build
 ```
 
 O arquivo application.properties (em src/main/resources) contém as credenciais da aplicação Google. Certifique-se de modificar os seguintes atributos para os valores do seu aplicativo:
-
 ```bash
     google.client.id=
     google.client.secret=
@@ -46,9 +44,9 @@ O arquivo application.properties (em src/main/resources) contém as credenciais 
     - Tipo de Aplicação = Aplicação Web (Spring Boot)
     - Origens JavaScript Autorizadas = (deixe em branco ou preencha conforme necessário)
     - URI de Redirecionamento Autorizado = http://localhost:9000/login/google
-        5️. **Copie o Client ID e o Client Secret e atualize o arquivo application.properties.**
-        6️. **Vá até "APIs e serviços" → "Biblioteca" e ative a Google Calendar API.**
-        7️. **Preencha as informações obrigatórias na aba "Tela de Consentimento OAuth".**
+        - 5️. **Copie o Client ID e o Client Secret e atualize o arquivo application.properties.**
+        - 6. **Vá até "APIs e serviços" → "Biblioteca" e ative a Google Calendar API.**
+        - 7. **Preencha as informações obrigatórias na aba "Tela de Consentimento OAuth".**
 
 ### Testando a autenticação e integração com o Google Calendar
 
