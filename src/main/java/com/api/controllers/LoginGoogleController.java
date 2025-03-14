@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -19,12 +18,12 @@ public class LoginGoogleController {
 	private GoogleAuthService googleAuthService;
 
 
-    @RequestMapping(value = "/login/google", method = RequestMethod.GET)
+    @GetMapping("/login/google")
     public RedirectView googleConnectionStatus(HttpServletRequest request) {
         return new RedirectView(googleAuthService.getAuthorizationUrl());
     }
 
-    @RequestMapping(value = "/login/google", method = RequestMethod.GET, params = "code")
+    @GetMapping(value = "/login/google", params = "code")
     public ResponseEntity<String> oauth2Callback(@RequestParam String code) {
         try {
             googleAuthService.authenticateUser(code);
