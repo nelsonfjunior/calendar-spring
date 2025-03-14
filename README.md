@@ -22,11 +22,13 @@ Este é um aplicativo Spring Boot protegido pelo Spring Security OAuth2, utiliza
 ## Como executar o projeto?
 
 O projeto utiliza Maven, então basta executar o seguinte comando para compilá-lo:
+
     ```bash
     mvn clean build
     ```
 
 O arquivo application.properties (em src/main/resources) contém as credenciais da aplicação Google. Certifique-se de modificar os seguintes atributos para os valores do seu aplicativo:
+
     ```bash
     google.client.id=
     google.client.secret=
